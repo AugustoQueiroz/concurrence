@@ -1,0 +1,24 @@
+CreateMap
+
+Entrée:
+	TerrainSize: Taille en x et en y du terrain
+	Exit: Les positions que font la sortie
+	Obstacles: Une liste de obstacles codifiés comme (xmax, ymax, xmin, ymin)
+	Persons: Une liste de personnes codifiées comme (x, y, id)
+Sortie:
+	Map: Une matrice de la taille du terrain que codifie toutes les informations
+
+map <- matrice[terrainSize] of 0s
+
+for each exit position do:
+	map[exit position] = -2
+
+for each obstacle do:
+	for x going from obstacle.xmin to obstacle.xmax and
+		y going from obstacle.ymin to obstacle.ymax do:
+		map[x,y] = -1
+
+for each person do:
+	map[person.x, person.y] = person.id
+
+return map

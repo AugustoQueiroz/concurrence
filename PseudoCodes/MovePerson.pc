@@ -1,0 +1,20 @@
+Move Person
+
+Entrée:
+	Person
+	Map: L'état du terrain
+
+Sortie:
+	Moved: Un boolean disant si la personne a reussi a bouger
+
+positionsToMove = [(-1, -1), (-1, 0), (0, -1)]
+for each position in positionsToMove:
+	if Map[Person.x + position.x, Person.y + position.y] == 0:
+		Map[Person.x + position.x, Person.y + position.y] = Person.id
+		Person.x += position.x
+		Person.y += position.y
+		# A reussi a bouger
+		return True
+
+# N'a pas reussi a bouger
+return False

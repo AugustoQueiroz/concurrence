@@ -7,12 +7,22 @@ Entrée:
 Sortie:
 	Moved: Un boolean disant si la personne a reussi a bouger
 
+if Person.x < 0:
+	# Si la personne est déjà sorti, il-n'y-a aucune chose a faire
+	return False
+
 positionsToMove = [(-1, -1), (-1, 0), (0, -1)]
 for each position in positionsToMove:
 	if Map[Person.x + position.x, Person.y + position.y] == 0:
 		Map[Person.x + position.x, Person.y + position.y] = Person.id
 		Person.x += position.x
 		Person.y += position.y
+		# A reussi a bouger
+		return True
+	else if Map[Person.x + position.x, Person.y + position.y] <= -2:
+		Map[Person.x + position.x, Person.y + position.y] -= 1
+		Person.x = -1
+		Person.y = -1
 		# A reussi a bouger
 		return True
 

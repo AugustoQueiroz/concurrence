@@ -1,0 +1,14 @@
+MovePeople
+
+Entrée:
+	Persons: Une liste de personnes
+	Map: L'état actuelle du terrain
+
+Sortie:
+	Success: Un boolean qu'indique s'il a reussi a sauver toutes les personnes
+
+Organize persons by proximity to exit
+for each person do:
+	repeat:
+		person.move()
+	until it returns False

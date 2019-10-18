@@ -30,5 +30,5 @@ class Terrain:
 
 class Obstacle:
     def __init__(self, bounds):
-        self.top_left = Point(bounds[0], bounds[2])
-        self.bottom_right = Point(bounds[1], bounds[3])
+        self.top_left = Point(bounds[0], bounds[1])
+        self.bottom_right = Point(bounds[2], bounds[3])

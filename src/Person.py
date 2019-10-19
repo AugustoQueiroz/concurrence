@@ -1,4 +1,4 @@
-from src.Point import Point
+from Point import Point
 
 class Person:
     def __init__(self, identifier, position):
@@ -30,3 +30,8 @@ class Person:
                 closest = (exit, distance_from_person)
 
         return closest[0]
+    
+    def __str__(self):
+        return "Person {} : {} ".format(self.identifier,self.position)
+
+

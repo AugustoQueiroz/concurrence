@@ -4,7 +4,7 @@ from src.Person import Person
 class Terrain:
     @staticmethod
     def RandomTerrain(n_people):
-        return Terrain(size=(512, 128), obstacles=[], exits=[Point(0,0), Point(0, 1), Point(1, 0)], people=[Person(0, Point(510, 120))])
+        return Terrain(size=(512, 128), obstacles=[], exits=[Point(0,0), Point(0, 1), Point(1, 0)], people=[Person(0, Point(510, 120)), Person(1, Point(0, 120))])
 
     def __init__(self, size, obstacles, exits, people):
         self.size = size
@@ -27,6 +27,10 @@ class Terrain:
 
     def is_exit(self, position):
         return self._map[position.x][position.y] < 0
+
+    def update_person_position(self, position_update):
+        self._map[position_update[0].x][position_update[0].y] = 0
+        self._map[position_update[1].x][position_update[0].y] = 2
 
 class Obstacle:
     def __init__(self, bounds):

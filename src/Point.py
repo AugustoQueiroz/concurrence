@@ -10,3 +10,6 @@ class Point:
 
     def moved_by(self, dx, dy):
         return Point(self.x + dx, self.y + dy)
+    def __str__(self):
+        return "({:>3},{:>3})".format(self.x,self.y)
+

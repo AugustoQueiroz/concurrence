@@ -1,4 +1,4 @@
-from src.Point import Point
+from Point import Point
 
 class Person:
     def __init__(self, identifier, position):
@@ -37,3 +37,6 @@ class Person:
         while not terrain.is_exit(self.position):
             position_update = self.move_towards(self.closest_exit(terrain.exits), terrain=terrain)
             print("Person", self.identifier, "moved to", self.position.x, self.position.y)
+    
+    def __str__(self):
+        return "Person {} : {} ".format(self.identifier,self.position)

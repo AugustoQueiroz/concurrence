@@ -1,4 +1,4 @@
-from Point import Point
+from src.Point import Point
 
 class Person:
     def __init__(self, identifier, position):
@@ -12,11 +12,14 @@ class Person:
             for dy in range(-1, 2):
                 new_position = self.position.moved_by(dx, dy)
                 if terrain.is_position_blocked(new_position):
+                    #print("Cannot move there")
                     continue
                 new_distance = new_position.distance_to(goal)
 
                 if new_distance < best_movement[1]:
                     best_movement = (new_position, new_distance)
+                #else:
+                    #print("Wont move there")
         
         old_position = self.position
         self.position = best_movement[0]

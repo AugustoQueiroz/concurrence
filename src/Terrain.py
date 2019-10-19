@@ -1,13 +1,12 @@
-from Point import Point
-from Person import Person
-from GLOBAL_CONSTANTS import *
+from src.Point import Point
+from src.Person import Person
+from src.GLOBAL_CONSTANTS import *
 import random
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
 class Terrain:
-    
     @staticmethod
     def RandomTerrain(n_people,size=DEFAULT_SIZE,exits = DEFAULT_EXITS):
         dimRows,dimCols = size
@@ -70,9 +69,12 @@ class Terrain:
             randomEmptyPlaceIndex = random.randint(0, len(emptyPlaces)-1)
             if _map[emptyPlaces[randomEmptyPlaceIndex].x][emptyPlaces[randomEmptyPlaceIndex].y] == 0:
                 #PeopleSpawned +1 represents the id of the person
-                _map[emptyPlaces[randomEmptyPlaceIndex].x][emptyPlaces[randomEmptyPlaceIndex].y] = PeopleSpawned + 1 
+                _map[emptyPlaces[randomEmptyPlaceIndex].x][emptyPlaces[randomEmptyPlaceIndex].y] = PERSON_IDENTIFIER # PeopleSpawned + 1 
                 PeopleSpawned+=1
-                peopleList.append(Person(PeopleSpawned+1, emptyPlaces[randomEmptyPlaceIndex]))
+                peopleList.append(Person(PeopleSpawned, emptyPlaces[randomEmptyPlaceIndex]))
+
+        for exit in exits:
+            _map[exit.x][exit.y] = EXIT_IDENTIFIER
         
         #for p in peopleList:
         #    print(p)
@@ -130,9 +132,15 @@ class Terrain:
                 self._map[person.position.x][person.position.y] = 2
 
     def is_position_blocked(self, position):
-        return self._map[position.x][position.y] > OBSTACLE_IDENTIFIER
+        #print(self._map[position.x][position.y], self._map[position.x][position.y] > 0)
+        try:
+            return position.x < 0 or position.y < 0 or position.x >= len(self._map) or position.y >= len(self._map[0]) or self._map[position.x][position.y] > 0
+        except IndexError:
+            print("Index error at ", position.x, position.y)
+            return True
 
     def is_exit(self, position):
+        #return position in self.exits
         return self._map[position.x][position.y] == EXIT_IDENTIFIER
 
     @staticmethod
@@ -168,8 +176,11 @@ class Terrain:
         return flag
 
     def update_person_position(self, position_update):
+        if position_update[0].x == position_update[1].x and position_update[0].y == position_update[1].y:
+            return
         self._map[position_update[0].x][position_update[0].y] = 0
-        self._map[position_update[1].x][position_update[0].y] = 2
+        if not self.is_exit(position_update[1]):
+            self._map[position_update[1].x][position_update[1].y] = PERSON_IDENTIFIER
 
 class Obstacle:
     def __init__(self, x1,y1 , x2,y2 ):

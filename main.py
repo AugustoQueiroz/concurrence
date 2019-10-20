@@ -6,7 +6,7 @@ parser = arg_mng.createParser()
 args = parser.parse_args()
 
 print("Generating Terrain")
-terrain = Terrain.RandomTerrain(n_people=2**args.p)
+terrain = Terrain.RandomTerrain(n_people=args.p)
 print("Terrain Generated")
 print("Instantiating Simulator")
 simulator = MobSimulator(terrain)

@@ -18,6 +18,7 @@ class Terrain:
         totalPlaces-= len(DEFAULT_EXITS)
         
         #GENERATING OBSTACLES
+        print("GENERATING OBSTACLES...")
         obstaclesList = []
         stopGeneratingObstacles = False
         for i in range( dimRows ) : 
@@ -54,7 +55,10 @@ class Terrain:
                         obstaclesList.append(Obstacle(entryRow,entryCol , leaveRow ,leaveCol))
         #for obstacle in obstaclesList :
         #    print (obstacle)
+        print("GENERATING OBSTACLES COMPLETE!")
         
+        
+        print("GENERATING PEOPLE...")        
         #Generating People
         totalNumberOfPeople = 2**n_people
         PeopleSpawned = 0
@@ -72,7 +76,8 @@ class Terrain:
                 _map[emptyPlaces[randomEmptyPlaceIndex].x][emptyPlaces[randomEmptyPlaceIndex].y] = PERSON_IDENTIFIER # PeopleSpawned + 1 
                 PeopleSpawned+=1
                 peopleList.append(Person(PeopleSpawned, emptyPlaces[randomEmptyPlaceIndex]))
-
+        
+        print("GENERATING PEOPLE COMPLETE!")        
         for exit in exits:
             _map[exit.x][exit.y] = EXIT_IDENTIFIER
         

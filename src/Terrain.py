@@ -66,7 +66,7 @@ class Terrain:
         peopleList = []
         for i in range(dimRows):
             for j in range(dimCols):
-                if _map[i][j] == EMPTY_IDENTIFIER :
+                if _map[i][j] == EMPTY_IDENTIFIER and _map[i][j] != EXIT_IDENTIFIER:
                     emptyPlaces.append(Point(i,j))
         
         while PeopleSpawned < totalNumberOfPeople :
@@ -77,7 +77,7 @@ class Terrain:
                 PeopleSpawned+=1
                 peopleList.append(Person(PeopleSpawned, emptyPlaces[randomEmptyPlaceIndex]))
         
-        print("GENERATING PEOPLE COMPLETE!")        
+            print("GENERATING PEOPLE COMPLETE!")        
         for exit in exits:
             _map[exit.x][exit.y] = EXIT_IDENTIFIER
         

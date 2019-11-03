@@ -25,7 +25,7 @@ class MobSimulator:
                         #print(line)
 
                 if self.terrain.is_exit(person.position):
-                    print("Person", person.identifier, "successfully exited")
+                    #print("Person", person.identifier, "successfully exited")
                     self.terrain.people.remove(person)
 
     def run_one_thread_per_person(self):

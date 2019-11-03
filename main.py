@@ -75,5 +75,6 @@ if args.m is True :
     print("Intermediate Real Times Taken to run the simulation", RealTime[1:4])
     print("Intermediate CPU Times Taken to run the simulation", CPU_TIME[1:4])
     avgRealTime = sum(RealTime[1:4]) / 3
-    print("Average Time Taken to run the simulation : ", RealTime )
-    print(RealTime[1],RealTime[2],RealTime[3],RealTime)
+    print("Average Time Taken to run the simulation : ", avgRealTime )
+    avgCPUTime = sum(CPU_TIME[1:4]) / 3
+    print("Average Time Taken to run the simulation : ", avgCPUTime )

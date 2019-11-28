@@ -29,9 +29,15 @@ class MobSimulator:
                     self.terrain.people.remove(person)
 
     def run_one_thread_per_person(self):
+        person_threads = []
         for person in self.terrain.people:
             x = threading.Thread(target=person.loop, args=(self.terrain,))
             x.start()
+            person_threads.append(x)
+
+        for thread in person_threads:
+            thread.join()
+            
 
     def run_one_thread_per_quadrant(self):
         pass

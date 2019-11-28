@@ -3,22 +3,41 @@ CreateMap
 Entrée:
 	TerrainSize: Taille en x et en y du terrain
 	Exit: Les positions que font la sortie
-	Obstacles: Une liste de obstacles codifiés comme (xmax, ymax, xmin, ymin)
-	Persons: Une liste de personnes codifiées comme (x, y, id)
+	N_Persons: Nombre de personnes présentent sur le terrain
 Sortie:
 	Map: Une matrice de la taille du terrain que codifie toutes les informations
 
-map <- matrice[terrainSize] of 0s
+Map <- matrice[terrainSize] of 0s
 
 for each exit position do:
-	map[exit position] = -2
+	Map[exit position] = -2
 
-for each obstacle do:
-	for x going from obstacle.xmin to obstacle.xmax and
-		y going from obstacle.ymin to obstacle.ymax do:
-		map[x,y] = -1
+#Calculer le nombre de cases où on peut mettre des obstacles.
+# 512 == Nombre de personnes maximal que peuvent être sur le terrain
+# 3  == Nombre de sorties
 
-for each person do:
-	map[person.x, person.y] = person.id
+TotalEmptyPlaces <- TerrainSize.Rows * terrainSize.Cols - 512 - 3
 
-return map
+
+#GENERATION DES OBSTACLES
+Tant que TotalEmptyPlaces > 0 :
+	for each row in TerrainSize.Rows
+		for each col in TerrainSize.Rows
+			on génére un nombre aleatoire entre 0 et 1 nommé RAND
+			si RAND dépasse un seuil ( 0.90 ) :
+				on génere un sizeRow aleatoire entre 0 et 6 
+				on génere un sizeCol aleatoire entre 0 et 6 
+				on crée un obstacle commencant de (row,col) jusqu'à (row+sizeRow, col+sizeCol)
+
+#Liste des cases vides
+on génére une liste EmptyCases, contenant toutes les cases qui sont vides
+
+#GENERATION DES PERSONNES
+Nombre_personnes <- 2**N_Persons
+tant que Nombre_personnes > 0
+	on génére un index "idx" aléatoire entre 1 et la taille de la liste EmptyCases
+	Map[EmptyCases[idx]] = 1
+	Nombre_personnes <- Nombre_personnes -1
+
+
+return Map

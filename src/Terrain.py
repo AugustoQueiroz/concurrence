@@ -78,7 +78,7 @@ class Terrain:
                 PeopleSpawned+=1
                 peopleList.append(Person(PeopleSpawned, emptyPlaces[randomEmptyPlaceIndex]))
         
-            print("GENERATING PEOPLE COMPLETE!")        
+        print("GENERATING PEOPLE COMPLETE!")        
         for exit in exits:
             _map[exit.x][exit.y] = EXIT_IDENTIFIER
         

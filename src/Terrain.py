@@ -3,6 +3,7 @@ from src.Person import Person
 from src.GLOBAL_CONSTANTS import *
 import random
 import numpy as np
+import threading
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -115,6 +116,7 @@ class Terrain:
         self.exits = exits
         self.people = people
 
+        self.locks = [[threading.Lock() for _ in range(size[1])] for _ in range(size[0])]
        
         if map is not None : 
             self._map = map
@@ -135,6 +137,18 @@ class Terrain:
             #fill Map with KNOWN People
             for person in people:
                 self._map[person.position.x][person.position.y] = 2
+
+    def lock_positions_for_person(self, person_position):
+        self.locks[person_position.x][person_position.y].acquire()
+        self.locks[person_position.x-1][person_position.y].acquire()
+        self.locks[person_position.x][person_position.y-1].acquire()
+        self.locks[person_position.x-1][person_position.y-1].acquire()
+
+    def unlock_positions_for_person(self, person_last_position):
+        self.locks[person_last_position.x][person_last_position.y].release()
+        self.locks[person_last_position.x-1][person_last_position.y].release()
+        self.locks[person_last_position.x][person_last_position.y-1].release()
+        self.locks[person_last_position.x-1][person_last_position.y-1].release()
 
     def is_position_blocked(self, position):
         #print(self._map[position.x][position.y], self._map[position.x][position.y] > 0)
@@ -186,6 +200,15 @@ class Terrain:
         self._map[position_update[0].x][position_update[0].y] = 0
         if not self.is_exit(position_update[1]):
             self._map[position_update[1].x][position_update[1].y] = PERSON_IDENTIFIER
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state['locks']
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.locks = [[threading.Lock() for _ in range(size[1])] for _ in range(size[0])]
 
 class Obstacle:
     def __init__(self, x1,y1 , x2,y2 ):

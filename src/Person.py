@@ -6,6 +6,7 @@ class Person:
         self.position = position
 
     def move_towards(self, goal, terrain):
+        terrain.lock_positions_for_person(self.position)
         best_movement = (self.position, self.position.distance_to(goal))
 
         for dx in range(-1, 2):
@@ -23,6 +24,8 @@ class Person:
         
         old_position = self.position
         self.position = best_movement[0]
+
+        terrain.unlock_positions_for_person(old_position)
 
         return (old_position, self.position)
 

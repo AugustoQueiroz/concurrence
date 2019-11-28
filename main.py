@@ -15,7 +15,7 @@ if args.l is None :
     terrain = Terrain.RandomTerrain(n_people=args.p)
     print("Terrain Generated")
     FileNameOut = "GeneratedTerrains/GeneratedTerrain_NP_"+str(args.p)+"___"+str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))+".dat"
-    pickleOut= open(FileNameOut , "wb")
+    pickleOut= open(FileNameOut , "wb+")
     pickle.dump(terrain,pickleOut)
     pickleOut.close()
 else:
@@ -63,7 +63,23 @@ if args.t == 0:
         CPU_TIME.append(elapsed_time_CPU)
         print("Simulation", i+1 ,"Finished ")
 elif args.t == 1:
-    simulator.run_one_thread_per_person()
+    RealTime = []
+    CPU_TIME = []
+    for i in range(5):
+        print("Running Simulation " , i+1)
+        simulator = MobSimulator(copy.deepcopy(terrain))
+        t_REAL = time.time()
+        t_CPU = time.process_time()
+
+        #
+        # RT= timeit.Timer(simulator.run_single_threaded).repeat(repeat=1,number=1)[0]
+        simulator.run_one_thread_per_person()
+        elapsed_time_CPU = time.process_time() - t_CPU
+        elapsed_time_REAL =  time.time() - t_REAL 
+        RealTime.append(elapsed_time_REAL)
+        CPU_TIME.append(elapsed_time_CPU)
+        print("Simulation", i+1 ,"Finished ")
+        print(simulator.terrain.persons_exited, "People Exited")
 elif args.t == 2:
     simulator.run_one_thread_per_quadrant()
     

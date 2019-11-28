@@ -78,7 +78,7 @@ class Terrain:
                 PeopleSpawned+=1
                 peopleList.append(Person(PeopleSpawned, emptyPlaces[randomEmptyPlaceIndex]))
         
-        print("GENERATING PEOPLE COMPLETE!")        
+            print("GENERATING PEOPLE COMPLETE!")        
         for exit in exits:
             _map[exit.x][exit.y] = EXIT_IDENTIFIER
         
@@ -115,8 +115,10 @@ class Terrain:
         self.obstacles = obstacles
         self.exits = exits
         self.people = people
+        self.persons_exited = 0
 
-        self.locks = [[threading.Lock() for _ in range(size[1])] for _ in range(size[0])]
+        self.locks = [[threading.RLock() for _ in range(size[1])] for _ in range(size[0])]
+        self.update_lock = threading.RLock()
        
         if map is not None : 
             self._map = map
@@ -195,20 +197,29 @@ class Terrain:
         return flag
 
     def update_person_position(self, position_update):
+        #self.update_lock.acquire()
         if position_update[0].x == position_update[1].x and position_update[0].y == position_update[1].y:
             return
         self._map[position_update[0].x][position_update[0].y] = 0
         if not self.is_exit(position_update[1]):
             self._map[position_update[1].x][position_update[1].y] = PERSON_IDENTIFIER
+        else:
+            print("Person Exited")
+            self.persons_exited += 1
+        #self.update_lock.release()
 
     def __getstate__(self):
         state = self.__dict__.copy()
         del state['locks']
+        del state['update_lock']
+        print("HERE")
         return state
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.locks = [[threading.Lock() for _ in range(size[1])] for _ in range(size[0])]
+        self.locks = [[threading.RLock() for _ in range(self.size[1])] for _ in range(self.size[0])]
+        self.update_lock = threading.RLock()
+        print("THERE")
 
 class Obstacle:
     def __init__(self, x1,y1 , x2,y2 ):

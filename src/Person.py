@@ -5,15 +5,17 @@ class Person:
         self.identifier = identifier
         self.position = position
 
-    def move_towards(self, goal, terrain):
-        terrain.lock_positions_for_person(self.position)
+    def move_towards(self, goal, terrain, locking=False):
+        if locking:
+            terrain.lock_positions_for_person(self.position)
+            #print('Locked positions')
         best_movement = (self.position, self.position.distance_to(goal))
 
-        for dx in range(-1, 2):
-            for dy in range(-1, 2):
+        for dx in range(-1, 1):
+            for dy in range(-1, 1):
                 new_position = self.position.moved_by(dx, dy)
                 if terrain.is_position_blocked(new_position):
-                    #print("Cannot move there")
+                    #print("Cannot move there", terrain._map[new_position.x][new_position.y])
                     continue
                 new_distance = new_position.distance_to(goal)
 
@@ -25,7 +27,11 @@ class Person:
         old_position = self.position
         self.position = best_movement[0]
 
-        terrain.unlock_positions_for_person(old_position)
+        terrain.update_person_position((old_position, self.position))
+
+        if locking:
+            terrain.unlock_positions_for_person(old_position)
+            #print('Unlocked positions')
 
         return (old_position, self.position)
 
@@ -41,7 +47,8 @@ class Person:
 
     def loop(self, terrain):
         while not terrain.is_exit(self.position):
-            position_update = self.move_towards(self.closest_exit(terrain.exits), terrain=terrain)
+            position_update = self.move_towards(self.closest_exit(terrain.exits), terrain=terrain, locking=True)
+            #terrain.update_person_position(position_update)
             #print("Person", self.identifier, "moved to", self.position.x, self.position.y)
     
     def __str__(self):

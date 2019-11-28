@@ -10,7 +10,7 @@ class MobSimulator:
 
             for person in mob:
                 position_update = person.move_towards(person.closest_exit(self.terrain.exits), terrain=self.terrain)
-                self.terrain.update_person_position(position_update)
+                #self.terrain.update_person_position(position_update)
                 #if position_update[0].x == position_update[1].x and position_update[0].y == position_update[1].y:
                     #print("Person", person.identifier, "didn't move")
                     #for dx in range(-1, 2):

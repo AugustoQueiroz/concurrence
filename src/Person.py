@@ -48,6 +48,8 @@ class Person:
     def loop(self, terrain):
         while not terrain.is_exit(self.position):
             position_update = self.move_towards(self.closest_exit(terrain.exits), terrain=terrain, locking=True)
+            if person_update[0].x == person_update[1].x and person_update[0].x == person_update[1].x:
+                print('Person', self.identifier, 'is not moving')
             #terrain.update_person_position(position_update)
             #print("Person", self.identifier, "moved to", self.position.x, self.position.y)
     

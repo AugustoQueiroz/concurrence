@@ -1,4 +1,4 @@
-import threading
+import multiprocessing
 
 class MobSimulator:
     def __init__(self, terrain):
@@ -31,7 +31,7 @@ class MobSimulator:
     def run_one_thread_per_person(self):
         person_threads = []
         for person in self.terrain.people:
-            x = threading.Thread(target=person.loop, args=(self.terrain,))
+            x = multiprocessing.Process(target=person.loop, args=(self.terrain,))
             x.start()
             person_threads.append(x)
 

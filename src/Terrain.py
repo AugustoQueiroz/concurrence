@@ -3,7 +3,7 @@ from src.Person import Person
 from src.GLOBAL_CONSTANTS import *
 import random
 import numpy as np
-import threading
+import multiprocessing
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -117,8 +117,8 @@ class Terrain:
         self.people = people
         self.persons_exited = 0
 
-        self.locks = [[threading.RLock() for _ in range(size[1])] for _ in range(size[0])]
-        self.update_lock = threading.RLock()
+        self.locks = [[multiprocessing.RLock() for _ in range(size[1])] for _ in range(size[0])]
+        self.update_lock = multiprocessing.RLock()
        
         if map is not None : 
             self._map = map
@@ -217,8 +217,8 @@ class Terrain:
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.locks = [[threading.RLock() for _ in range(self.size[1])] for _ in range(self.size[0])]
-        self.update_lock = threading.RLock()
+        self.locks = [[multiprocessing.RLock() for _ in range(self.size[1])] for _ in range(self.size[0])]
+        self.update_lock = multiprocessing.RLock()
         print("THERE")
 
 class Obstacle:

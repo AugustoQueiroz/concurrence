@@ -56,6 +56,14 @@ class Terrain:
                         obstaclesList.append(Obstacle(entryRow,entryCol , leaveRow ,leaveCol))
         #for obstacle in obstaclesList :
         #    print (obstacle)
+        for j in range (0,128):
+            _map[255][j] = EMPTY_IDENTIFIER
+            _map[256][j] = EMPTY_IDENTIFIER
+            
+        for i in range (0,512):
+            _map[i][63] = EMPTY_IDENTIFIER
+            _map[i][64] = EMPTY_IDENTIFIER
+            
         print("GENERATING OBSTACLES COMPLETE!")
         
         
@@ -108,7 +116,27 @@ class Terrain:
         
         
             
-                    
+    def keepOnlyPeopleOfQuadrant(self, quandrantID ):
+        newPeople = []
+        for person in self.people:
+            if person.position.isInside(rangeQ[quandrantID-1]):
+                newPeople.append(person)
+            else:
+                self._map[person.position.x][person.position.y] = EMPTY_IDENTIFIER
+        self.people = newPeople
+        
+        if(quandrantID == 4):
+            for i in range (0,512):
+                self._map[i][63] = OBSTACLE_IDENTIFIER
+            for i in range (0,128):
+                self._map[255][i] = OBSTACLE_IDENTIFIER
+        if(quandrantID == 2):
+            for i in range (0,512):
+                self._map[i][63] = OBSTACLE_IDENTIFIER
+        if(quandrantID == 3):
+            for i in range (0,128):
+                self._map[255][i] = OBSTACLE_IDENTIFIER
+                     
 
     def __init__(self, obstacles, people, map=None, size=DEFAULT_SIZE,exits = DEFAULT_EXITS):
         self.size = size
@@ -117,8 +145,8 @@ class Terrain:
         self.people = people
         self.persons_exited = 0
 
-        self.locks = [[threading.RLock() for _ in range(size[1])] for _ in range(size[0])]
-        self.update_lock = threading.RLock()
+        self.locks = [[threading.Lock() for _ in range(size[1])] for _ in range(size[0])]
+        self.update_lock = threading.Lock()
        
         if map is not None : 
             self._map = map
@@ -147,10 +175,10 @@ class Terrain:
         self.locks[person_position.x-1][person_position.y-1].acquire()
 
     def unlock_positions_for_person(self, person_last_position):
-        self.locks[person_last_position.x][person_last_position.y].release()
-        self.locks[person_last_position.x-1][person_last_position.y].release()
-        self.locks[person_last_position.x][person_last_position.y-1].release()
         self.locks[person_last_position.x-1][person_last_position.y-1].release()
+        self.locks[person_last_position.x][person_last_position.y-1].release()
+        self.locks[person_last_position.x-1][person_last_position.y].release()
+        self.locks[person_last_position.x][person_last_position.y].release()
 
     def is_position_blocked(self, position):
         #print(self._map[position.x][position.y], self._map[position.x][position.y] > 0)
@@ -162,7 +190,13 @@ class Terrain:
 
     def is_exit(self, position):
         #return position in self.exits
-        return self._map[position.x][position.y] == EXIT_IDENTIFIER
+        for exit in DEFAULT_EXITS:
+            if(position == exit):
+                return True
+        return False
+        # return self._map[position.x][position.y] == EXIT_IDENTIFIER
+    
+    
 
     @staticmethod
     def __isPlaceOk(_map, i: int , j: int,size=DEFAULT_SIZE) -> bool:
@@ -204,7 +238,9 @@ class Terrain:
         if not self.is_exit(position_update[1]):
             self._map[position_update[1].x][position_update[1].y] = PERSON_IDENTIFIER
         else:
-            print("Person Exited")
+            # print("Person Exited")
+            # print(position_update[1].x,position_update[1].y)
+            # print(position_update[0].x,position_update[0].y)
             self.persons_exited += 1
         #self.update_lock.release()
 
@@ -212,14 +248,14 @@ class Terrain:
         state = self.__dict__.copy()
         del state['locks']
         del state['update_lock']
-        print("HERE")
+        # print("HERE")
         return state
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.locks = [[threading.RLock() for _ in range(self.size[1])] for _ in range(self.size[0])]
-        self.update_lock = threading.RLock()
-        print("THERE")
+        self.locks = [[threading.Lock() for _ in range(self.size[1])] for _ in range(self.size[0])]
+        self.update_lock = threading.Lock()
+        # print("THERE")
 
 class Obstacle:
     def __init__(self, x1,y1 , x2,y2 ):

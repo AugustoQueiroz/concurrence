@@ -1,11 +1,12 @@
 from src.Point import Point
 
 class Person:
-    def __init__(self, identifier, position):
+    def __init__(self, identifier, position,blockingMessage=-1):
         self.identifier = identifier
         self.position = position
+        self.blockingMessage= blockingMessage
 
-    def move_towards(self, goal, terrain, locking=False):
+    def move_towards(self, goal, terrain, locking=False,type=0):
         if locking:
             terrain.lock_positions_for_person(self.position)
             #print('Locked positions')
@@ -48,10 +49,10 @@ class Person:
     def loop(self, terrain):
         while not terrain.is_exit(self.position):
             position_update = self.move_towards(self.closest_exit(terrain.exits), terrain=terrain, locking=True)
-            if person_update[0].x == person_update[1].x and person_update[0].x == person_update[1].x:
-                print('Person', self.identifier, 'is not moving')
-            #terrain.update_person_position(position_update)
+            # if person_update[0].x == person_update[1].x and person_update[0].x == person_update[1].x:
+                # print('Person', self.identifier, 'is not moving')
+            # terrain.update_person_position(position_update)
             #print("Person", self.identifier, "moved to", self.position.x, self.position.y)
-    
+            
     def __str__(self):
         return "Person {} : {} ".format(self.identifier,self.position)
